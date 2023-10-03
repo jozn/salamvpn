@@ -1,4 +1,4 @@
-package com.github.oezeb.cypher_connect
+package app.firstvpn
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.os.Looper
 import android.os.RemoteException
 import android.view.View
 import androidx.preference.PreferenceDataStore
+import app.firstvpn.R
+//import com.github.oezeb.cypher_connect.R
 import com.github.oezeb.cypher_connect.design.Http
 import com.github.oezeb.cypher_connect.design.MainDesign
 import com.github.shadowsocks.Core

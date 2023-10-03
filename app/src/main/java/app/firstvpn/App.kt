@@ -1,4 +1,4 @@
-package com.github.oezeb.cypher_connect
+package app.firstvpn
 
 import android.app.Application
 import android.content.res.Configuration

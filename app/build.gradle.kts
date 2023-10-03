@@ -8,8 +8,12 @@ plugins {
 setupApp()
 
 android {
-    namespace = "com.github.oezeb.cypher_connect"
-    defaultConfig.applicationId = "com.github.oezeb.cypher_connect"
+//    namespace = "com.github.oezeb.cypher_connect"
+//    namespace = "app.salamvpn"
+    namespace = "app.firstvpn"
+//    defaultConfig.applicationId = "com.github.oezeb.cypher_connect"
+//    defaultConfig.applicationId = "app.salamvpn"
+    defaultConfig.applicationId = "app.firstvpn"
 }
 
 dependencies {

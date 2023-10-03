@@ -1,4 +1,4 @@
-package com.github.oezeb.cypher_connect
+package app.firstvpn
 
 import com.github.shadowsocks.database.Profile
 import timber.log.Timber

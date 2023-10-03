@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "147389563730",
-    "project_id": "cypher-connect",
-    "storage_bucket": "cypher-connect.appspot.com"
+    "project_number": "94955523851",
+    "project_id": "firstvpn-6c1bd",
+    "storage_bucket": "firstvpn-6c1bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:147389563730:android:bf26dd4ebd8ead7dcaf08b",
+        "mobilesdk_app_id": "1:94955523851:android:11bd71774c9bd7d1fddc0e",
         "android_client_info": {
-          "package_name": "com.github.oezeb.cypher_connect"
+          "package_name": "app.firstvpn"
         }
       },
       "oauth_client": [
         {
-          "client_id": "147389563730-skmp1on66t7die24t6gh0piqr807u2af.apps.googleusercontent.com",
+          "client_id": "94955523851-pb0qpjgh5lemqbv95u16i3l5gu3o3i4q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA0j3TJaBuoFeDPfzUX0lOPx4cq-x71rvY"
+          "current_key": "AIzaSyA9l_5AEkKvMCBw4k4ZMuHt0reE2zx3gJQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "147389563730-skmp1on66t7die24t6gh0piqr807u2af.apps.googleusercontent.com",
+              "client_id": "94955523851-pb0qpjgh5lemqbv95u16i3l5gu3o3i4q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
