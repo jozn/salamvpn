@@ -23,7 +23,7 @@ package com.github.shadowsocks.bg
 import android.net.LocalSocket
 import android.os.SystemClock
 import com.github.shadowsocks.aidl.TrafficStats
-import com.github.shadowsocks.database.ProfileManager
+//import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.net.LocalSocketListener
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.utils.DirectBoot
@@ -89,7 +89,8 @@ class TrafficMonitor(statFile: File) {
     }
 
     fun persistStats(id: Long) {
-        val current = current
+        // todo KK
+/*        val current = current
         check(persisted == null || persisted == current) { "Data loss occurred" }
         persisted = current
         try {
@@ -106,6 +107,6 @@ class TrafficMonitor(statFile: File) {
             profile.dirty = true
             DirectBoot.update(profile)
             DirectBoot.listenForUnlock()
-        }
+        }*/
     }
 }

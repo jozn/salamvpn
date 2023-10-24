@@ -42,7 +42,8 @@ object DataStore : OnPreferenceDataStoreChangeListener {
 
     override fun onPreferenceDataStoreChanged(store: PreferenceDataStore, key: String) {
         when (key) {
-            Key.id -> if (directBootAware) DirectBoot.update()
+//            todo KK*
+//            Key.id -> if (directBootAware) DirectBoot.update()
         }
     }
 

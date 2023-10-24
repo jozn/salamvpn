@@ -58,6 +58,10 @@ object KKProfileDB {
         return profiles[id]
     }
 
+    fun getNonNull(id: Long): KKProfile {
+        return profiles[id] ?: throw IllegalArgumentException("Profile with ID $id not found")
+    }
+
     fun listActive(): List<KKProfile> {
         return sampleProfiles
     }
@@ -134,3 +138,16 @@ fun generateSampleProfiles(): List<KKProfile> {
 
 val sampleProfiles = generateSampleProfiles()
 
+data class KKExpandedProfile(val main: KKProfile, val udpFallback: KKProfile?) {
+    fun toList() = listOfNotNull(main, udpFallback)
+}
+
+fun getKKProfileById(id: Long): KKProfile? {
+    // Mock function to get KKProfile by its ID. You will need to replace this with actual functionality.
+    return null
+}
+
+fun expandProfile(profile: KKProfile): KKExpandedProfile {
+    // Mock function to expand KKProfile to KKExpandedProfile. You will need to adjust this.
+    return KKExpandedProfile(main = profile, udpFallback = null)
+}

@@ -65,7 +65,7 @@ object ProfileManager {
     }
 
     fun createProfilesFromJson(jsons: Sequence<InputStream>, replace: Boolean = false) {
-        val profiles = if (replace) getAllProfiles()?.associateBy { it.formattedAddress } else null
+        /*val profiles = if (replace) getAllProfiles()?.associateBy { it.formattedAddress } else null
         val feature = if (replace) {
             profiles?.values?.singleOrNull { it.id == DataStore.profileId }
         } else Core.currentProfile?.main
@@ -82,7 +82,7 @@ object ProfileManager {
                 }
                 createProfile(it)
             }
-        }
+        }*/
     }
 
     fun serializeToJson(profiles: List<Profile>? = getActiveProfiles()): JSONArray? {

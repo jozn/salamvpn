@@ -39,8 +39,13 @@ import com.github.shadowsocks.acl.Acl
 import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.core.BuildConfig
 import com.github.shadowsocks.core.R
-import com.github.shadowsocks.database.Profile
-import com.github.shadowsocks.database.ProfileManager
+import com.github.shadowsocks.kk_database.KKExpandedProfile
+import com.github.shadowsocks.kk_database.KKProfile
+import com.github.shadowsocks.kk_database.KKProfileDB
+import com.github.shadowsocks.kk_database.expandProfile
+import com.github.shadowsocks.kk_database.getKKProfileById
+//import com.github.shadowsocks.database.Profile
+//import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.utils.Action
 import com.github.shadowsocks.utils.DeviceStorageApp
@@ -78,16 +83,29 @@ object Core : Configuration.Provider {
         }
     }
 
-    val activeProfileIds get() = ProfileManager.getProfile(DataStore.profileId).let {
+    val activeProfileIds get() = KKProfileDB.get(DataStore.profileId).let {
         if (it == null) emptyList() else listOfNotNull(it.id, it.udpFallback)
     }
-    val currentProfile: ProfileManager.ExpandedProfile? get() {
+    // todo: fix this
+//    val currentProfile get() = KKProfileDB.get(DataStore.profileId) // me: my code, could be buggy
+//    val currentProfile: ProfileManager.ExpandedProfile? get() {
+//        if (DataStore.directBootAware) DirectBoot.getDeviceProfile()?.apply { return this }
+//        return ProfileManager.expand(ProfileManager.getProfile(DataStore.profileId) ?: return null)
+//    }
+
+    val currentProfile: KKExpandedProfile? get() {
         if (DataStore.directBootAware) DirectBoot.getDeviceProfile()?.apply { return this }
-        return ProfileManager.expand(ProfileManager.getProfile(DataStore.profileId) ?: return null)
+        return expandProfile(getKKProfileById(DataStore.profileId) ?: return null)
     }
 
-    fun switchProfile(id: Long): Profile {
-        val result = ProfileManager.getProfile(id) ?: ProfileManager.createProfile()
+//    fun switchProfile(id: Long): Profile {
+//        val result = ProfileManager.getProfile(id) ?: ProfileManager.createProfile()
+//        DataStore.profileId = result.id
+//        return result
+//    }
+
+    fun switchProfile(id: Long): KKProfile {
+        val result = KKProfileDB.getNonNull(id) // ?: ProfileManager.createProfile()
         DataStore.profileId = result.id
         return result
     }

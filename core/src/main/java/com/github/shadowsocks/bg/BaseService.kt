@@ -313,7 +313,8 @@ object BaseService {
         suspend fun openConnection(url: URL) = url.openConnection()
 
         fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-            val data = data
+            // todo migrate this to KK
+            /*val data = data
             if (data.state != State.Stopped) return Service.START_NOT_STICKY
             val expanded = Core.currentProfile
             this as Context
@@ -379,7 +380,7 @@ object BaseService {
                 } finally {
                     data.connectingJob = null
                 }
-            }
+            }*/
             return Service.START_NOT_STICKY
         }
     }

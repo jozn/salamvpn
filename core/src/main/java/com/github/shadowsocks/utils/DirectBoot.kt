@@ -8,8 +8,9 @@ import android.content.IntentFilter
 import com.github.shadowsocks.Core
 import com.github.shadowsocks.Core.app
 import com.github.shadowsocks.bg.BaseService
-import com.github.shadowsocks.database.Profile
-import com.github.shadowsocks.database.ProfileManager
+//import com.github.shadowsocks.database.Profile
+//import com.github.shadowsocks.database.ProfileManager
+import com.github.shadowsocks.kk_database.KKExpandedProfile
 import com.github.shadowsocks.preference.DataStore
 import java.io.File
 import java.io.IOException
@@ -21,9 +22,11 @@ object DirectBoot : BroadcastReceiver() {
     private val file = File(Core.deviceStorage.noBackupFilesDir, "directBootProfile")
     private var registered = false
 
-    fun getDeviceProfile(): ProfileManager.ExpandedProfile? = try {
-        ObjectInputStream(file.inputStream()).use { it.readObject() as? ProfileManager.ExpandedProfile }
-    } catch (_: IOException) { null }
+    // todo : migrat to KK*
+    fun getDeviceProfile(): KKExpandedProfile? = null;
+//    fun getDeviceProfile(): ProfileManager.ExpandedProfile? = try {
+//        ObjectInputStream(file.inputStream()).use { it.readObject() as? ProfileManager.ExpandedProfile }
+//    } catch (_: IOException) { null }
 
     fun clean() {
         file.delete()
@@ -34,16 +37,19 @@ object DirectBoot : BroadcastReceiver() {
     /**
      * app.currentProfile will call this.
      */
-    fun update(profile: Profile? = ProfileManager.getProfile(DataStore.profileId)) =
-            if (profile == null) clean()
-            else ObjectOutputStream(file.outputStream()).use { it.writeObject(ProfileManager.expand(profile)) }
+    // todo KK
+//    fun update(profile: Profile? = ProfileManager.getProfile(DataStore.profileId)) =
+//            if (profile == null) clean()
+//            else ObjectOutputStream(file.outputStream()).use { it.writeObject(ProfileManager.expand(profile)) }
+//    fun update(profile: Profile? ) = {}
 
     fun flushTrafficStats() {
-        getDeviceProfile()?.also { (profile, fallback) ->
-            if (profile.dirty) ProfileManager.updateProfile(profile)
-            if (fallback?.dirty == true) ProfileManager.updateProfile(fallback)
-        }
-        update()
+        // todo
+//        getDeviceProfile()?.also { (profile, fallback) ->
+//            if (profile.dirty) ProfileManager.updateProfile(profile)
+//            if (fallback?.dirty == true) ProfileManager.updateProfile(fallback)
+//        }
+//        update()
     }
 
     fun listenForUnlock() {
