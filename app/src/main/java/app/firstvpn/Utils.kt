@@ -1,6 +1,7 @@
 package app.firstvpn
 
-import com.github.shadowsocks.database.Profile
+//import com.github.shadowsocks.database.Profile
+import com.github.shadowsocks.kk_database.KKProfile
 import timber.log.Timber
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -13,7 +14,8 @@ const val TEST_TIME_OUT = 1000
 /**
  * Test profiles and return the delay in milliseconds
  */
-fun testProfiles(profiles: List<Profile>): List<Int> {
+//fun testProfiles(profiles: List<Profile>): List<Int> {
+fun testProfiles(profiles: List<KKProfile>): List<Int> {
     val delayArray = AtomicIntegerArray(profiles.size)
     profiles.mapIndexed { index, profile ->
         thread {

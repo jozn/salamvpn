@@ -17,33 +17,48 @@ data class KKProfile(
     var individual: String = "",
     var plugin: String? = null,
     var udpFallback: Long? = null,
-//    var subscription: SubscriptionStatus = SubscriptionStatus.UserConfigured,
     var tx: Long = 0,
     var rx: Long = 0,
     var userOrder: Long = 0,
     var dirty: Boolean = false
 ) {
-//    enum class SubscriptionStatus(val persistedValue: Int) {
-//        UserConfigured(0),
-//        Active(1),
-//        Obsolete(2)
-//    }
-
     val formattedAddress: String get() = (if (host.contains(":")) "[%s]:%d" else "%s:%d").format(host, remotePort)
     val formattedName: String get() = name ?: formattedAddress
 }
 
-class KKProfileDB {
+object KKProfileDB {
     private val profiles = mutableMapOf<Long, KKProfile>()
+    private val sampleProfiles = generateSampleProfiles()
+
+    private fun generateSampleProfiles(): List<KKProfile> {
+        val jsonPort = 443
+        val jsonPassword = "ePopTvLs2X3jy"
+        val jsonMethod = "aes-256-gcm"
+        val ip = "91.107.143.205"
+        val countries = listOf("US", "CA", "DE", "FR", "GB", "JP", "AU", "IN", "CN", "BR")
+        val profiles = mutableListOf<KKProfile>()
+        for (country in countries) {
+            val serverCount = (5..15).random()
+            for (i in 1..serverCount) {
+                profiles.add(
+                    KKProfile(
+                        name = "$country-Server-$i",
+                        host = ip,
+                        remotePort = jsonPort,
+                        password = jsonPassword,
+                        method = jsonMethod
+                    )
+                )
+            }
+        }
+        return profiles
+    }
 
     fun get(id: Long): KKProfile? {
         return profiles[id]
     }
 
     fun listActive(): List<KKProfile> {
-//        return profiles.values.filter { it.subscription != KKProfile.SubscriptionStatus.Obsolete }
-        // todo: fix
-//        return profiles.values.filter { true }
         return sampleProfiles
     }
 
@@ -85,6 +100,7 @@ class KKProfileDB {
         return size
     }
 }
+
 
 fun generateSampleProfiles(): List<KKProfile> {
     // Extract necessary data from the JSON

@@ -16,8 +16,9 @@ import com.github.shadowsocks.aidl.IShadowsocksService
 import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.aidl.TrafficStats
 import com.github.shadowsocks.bg.BaseService.State
-import com.github.shadowsocks.database.Profile
-import com.github.shadowsocks.database.ProfileManager
+//import com.github.shadowsocks.database.Profile
+import com.github.shadowsocks.kk_database.KKProfileDB
+//import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
 import com.github.shadowsocks.utils.Key
@@ -32,16 +33,18 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     }
 
     private fun getBestProfile(): Profile? {
-        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
+//        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
+        val profiles = KKProfileDB.listActive();
 
         val groups = profiles.chunked(MAX_CONCURRENT_TEST)
         var best = Pair<Profile?, Int>(null, Int.MAX_VALUE)
         for (group in groups) {
-            val delayArray = testProfiles(group)
-            val minDelayIndex = delayArray.indexOfFirst { it == delayArray.minOrNull() }
-            if (best.second > delayArray[minDelayIndex]) {
-                best = group[minDelayIndex] to delayArray[minDelayIndex]
-            }
+            // todo
+//            val delayArray = testProfiles(group)
+//            val minDelayIndex = delayArray.indexOfFirst { it == delayArray.minOrNull() }
+//            if (best.second > delayArray[minDelayIndex]) {
+//                best = group[minDelayIndex] to delayArray[minDelayIndex]
+//            }
         }
         return best.first
     }

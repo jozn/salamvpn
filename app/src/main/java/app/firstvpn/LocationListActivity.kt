@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.github.oezeb.cypher_connect.design.LocationListDesign
-import com.github.shadowsocks.database.ProfileManager
+import com.github.shadowsocks.kk_database.KKProfileDB
+//import com.github.shadowsocks.database.ProfileManager
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
@@ -15,7 +16,8 @@ class LocationListActivity: LocationListDesign() {
 
     private fun updateSpeed() {
         setProgressBarVisible(true)
-        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
+//        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
+        val profiles = KKProfileDB.listActive();
 
         val handler = Handler(Looper.getMainLooper())
         thread {
@@ -33,7 +35,8 @@ class LocationListActivity: LocationListDesign() {
     }
 
     override fun getProfiles(): List<Pair<Long, String>> =
-        ProfileManager.getActiveProfiles()?.map { Pair(it.id, it.name ?:"") } ?: emptyList()
+//        ProfileManager.getActiveProfiles()?.map { Pair(it.id, it.name ?:"") } ?: emptyList()
+    KKProfileDB.listActive()?.map { Pair(it.id, it.name ?:"") } ?: emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
