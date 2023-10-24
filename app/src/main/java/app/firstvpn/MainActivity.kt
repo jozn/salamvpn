@@ -16,6 +16,7 @@ import com.github.shadowsocks.aidl.IShadowsocksService
 import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.aidl.TrafficStats
 import com.github.shadowsocks.bg.BaseService.State
+import com.github.shadowsocks.kk_database.KKProfile
 //import com.github.shadowsocks.database.Profile
 import com.github.shadowsocks.kk_database.KKProfileDB
 //import com.github.shadowsocks.database.ProfileManager
@@ -32,19 +33,20 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
         const val MAX_CONCURRENT_TEST = 10
     }
 
-    private fun getBestProfile(): Profile? {
+//    private fun getBestProfile(): Profile? {
+    private fun getBestProfile(): KKProfile? {
 //        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
         val profiles = KKProfileDB.listActive();
 
         val groups = profiles.chunked(MAX_CONCURRENT_TEST)
-        var best = Pair<Profile?, Int>(null, Int.MAX_VALUE)
+        var best = Pair<KKProfile?, Int>(null, Int.MAX_VALUE)
         for (group in groups) {
             // todo
-//            val delayArray = testProfiles(group)
-//            val minDelayIndex = delayArray.indexOfFirst { it == delayArray.minOrNull() }
-//            if (best.second > delayArray[minDelayIndex]) {
-//                best = group[minDelayIndex] to delayArray[minDelayIndex]
-//            }
+            val delayArray = testProfiles(group)
+            val minDelayIndex = delayArray.indexOfFirst { it == delayArray.minOrNull() }
+            if (best.second > delayArray[minDelayIndex]) {
+                best = group[minDelayIndex] to delayArray[minDelayIndex]
+            }
         }
         return best.first
     }
@@ -54,7 +56,8 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     private var state = State.Idle
     private val syncProfilesThread = thread(false) { syncProfiles() }
 
-    private var bestProfile: Profile? = null
+//    private var bestProfile: Profile? = null
+    private var bestProfile: KKProfile? = null
     private var bestProfileThread = thread(false) { bestProfile = getBestProfile() }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -161,8 +164,9 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
             try {
                 val res = Http.get(url, timeout = 1000)
                 val text = if (res.ok) res.text else ""
-                ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
-                Profile.findAllUrls(text).forEach { ProfileManager.createProfile(it) }
+                // todo get from Orbit ; the list
+//                ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
+//                Profile.findAllUrls(text).forEach { ProfileManager.createProfile(it) }
                 break
             } catch (e: Exception) {
                 Timber.e(e)
