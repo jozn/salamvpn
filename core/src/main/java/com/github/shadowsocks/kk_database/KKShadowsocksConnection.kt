@@ -30,7 +30,6 @@ import com.github.shadowsocks.aidl.IShadowsocksService
 import com.github.shadowsocks.aidl.IShadowsocksServiceCallback
 import com.github.shadowsocks.aidl.TrafficStats
 import com.github.shadowsocks.bg.BaseService
-import com.github.shadowsocks.bg.VpnService
 import com.github.shadowsocks.utils.Action
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
  */
 class KKShadowsocksConnection(private var listenForDeath: Boolean = false) : ServiceConnection, IBinder.DeathRecipient {
     companion object {
-        val serviceClass get() = VpnService::class.java
+        val serviceClass get() = KKVpnService::class.java
     }
 
     interface Callback {
