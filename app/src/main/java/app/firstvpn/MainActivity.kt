@@ -26,6 +26,9 @@ import com.github.shadowsocks.utils.Key
 import timber.log.Timber
 import kotlin.concurrent.thread
 
+// Note: version v0.5 is just not gonna work; it's too much work for a little rewared we need a puer clean start
+//  for first version just lanuch something
+
 class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     OnPreferenceDataStoreChangeListener {
     companion object {
