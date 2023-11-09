@@ -13,12 +13,13 @@ import com.github.oezeb.cypher_connect.design.Http
 import com.github.oezeb.cypher_connect.design.MainDesign
 import com.github.shadowsocks.Core
 import com.github.shadowsocks.aidl.IShadowsocksService
-import com.github.shadowsocks.aidl.ShadowsocksConnection
+//import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.aidl.TrafficStats
 import com.github.shadowsocks.bg.BaseService.State
 import com.github.shadowsocks.kk_database.KKProfile
 //import com.github.shadowsocks.database.Profile
 import com.github.shadowsocks.kk_database.KKProfileDB
+import com.github.shadowsocks.kk_database.KKShadowsocksConnection
 //import com.github.shadowsocks.database.ProfileManager
 import com.github.shadowsocks.preference.DataStore
 import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
@@ -26,7 +27,7 @@ import com.github.shadowsocks.utils.Key
 import timber.log.Timber
 import kotlin.concurrent.thread
 
-class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
+class KKMainActivity : MainDesign(), KKShadowsocksConnection.Callback,
     OnPreferenceDataStoreChangeListener {
     companion object {
         var stateListener: ((state: State, profileName: String?) -> Unit)? = null
@@ -51,7 +52,7 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
         return best.first
     }
 
-    private val connection = ShadowsocksConnection(true)
+    private val connection = KKShadowsocksConnection(true)
     private var currentProfileId = -1L
     private var state = State.Idle
     private val syncProfilesThread = thread(false) { syncProfiles() }

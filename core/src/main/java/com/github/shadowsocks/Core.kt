@@ -37,6 +37,7 @@ import androidx.core.os.persistableBundleOf
 import androidx.work.Configuration
 import com.github.shadowsocks.acl.Acl
 import com.github.shadowsocks.aidl.ShadowsocksConnection
+import com.github.shadowsocks.bg.VpnService
 import com.github.shadowsocks.core.BuildConfig
 import com.github.shadowsocks.core.R
 import com.github.shadowsocks.kk_database.KKExpandedProfile
@@ -145,7 +146,8 @@ object Core : Configuration.Provider {
         if (Build.VERSION.SDK_INT >= 24 && DataStore.directBootAware && user.isUserUnlocked) {
             DirectBoot.flushTrafficStats()
         }
-        if (DataStore.publicStore.getLong(Key.assetUpdateTime, -1) != packageInfo.lastUpdateTime) {
+        // todo (me) need similet fethc server list
+        /*if (DataStore.publicStore.getLong(Key.assetUpdateTime, -1) != packageInfo.lastUpdateTime) {
             val assetManager = app.assets
             try {
                 for (file in assetManager.list("acl")!!) assetManager.open("acl/$file").use { input ->
@@ -155,7 +157,7 @@ object Core : Configuration.Provider {
                 Timber.w(e)
             }
             DataStore.publicStore.putLong(Key.assetUpdateTime, packageInfo.lastUpdateTime)
-        }
+        }*/
         updateNotificationChannels()
     }
 
@@ -197,7 +199,8 @@ object Core : Configuration.Provider {
         false
     }
 
-    fun startService() = ContextCompat.startForegroundService(app, Intent(app, ShadowsocksConnection.serviceClass))
+//    fun startService() = ContextCompat.startForegroundService(app, Intent(app, ShadowsocksConnection.serviceClass))
+    fun startService() = ContextCompat.startForegroundService(app, Intent(app, VpnService::class.java))
     fun reloadService() = app.sendBroadcast(Intent(Action.RELOAD).setPackage(app.packageName))
     fun stopService() = app.sendBroadcast(Intent(Action.CLOSE).setPackage(app.packageName))
 }

@@ -18,7 +18,7 @@
  *                                                                             *
  *******************************************************************************/
 
-package com.github.shadowsocks.bg
+package com.github.shadowsocks.kk_database
 
 import android.app.Service
 import android.content.Intent
@@ -34,6 +34,9 @@ import android.system.OsConstants
 import com.github.shadowsocks.Core
 import com.github.shadowsocks.VpnRequestActivity
 import com.github.shadowsocks.acl.Acl
+import com.github.shadowsocks.bg.BaseService
+import com.github.shadowsocks.bg.Executable
+import com.github.shadowsocks.bg.ServiceNotification
 import com.github.shadowsocks.core.R
 import com.github.shadowsocks.net.ConcurrentLocalSocketListener
 import com.github.shadowsocks.net.DefaultNetworkListener
@@ -52,7 +55,7 @@ import java.io.IOException
 import java.net.URL
 import android.net.VpnService as BaseVpnService
 
-class VpnService : BaseVpnService(), BaseService.Interface {
+class KKVpnService : BaseVpnService(), BaseService.Interface {
     companion object {
         private const val VPN_MTU = 1500
         private const val PRIVATE_VLAN4_CLIENT = "172.19.0.1"
