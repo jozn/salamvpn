@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cypher Connect</string>
+    <string name="app_name">Salam VPN</string>
 
     <string name="traffic">%1$s↑\t%2$s↓</string>
     <string name="speed">%s/s</string>
