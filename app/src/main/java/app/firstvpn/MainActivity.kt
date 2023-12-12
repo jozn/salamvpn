@@ -23,6 +23,9 @@ import com.github.shadowsocks.preference.OnPreferenceDataStoreChangeListener
 import com.github.shadowsocks.utils.Key
 import timber.log.Timber
 import kotlin.concurrent.thread
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import java.net.URL
 
 class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     OnPreferenceDataStoreChangeListener {
@@ -154,12 +157,34 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     }
 
     private fun syncProfiles() {
-        KKApp.saveToSharedPreferences(this,"sslist", ssList);
+        val jsonRes = fetchJsonFromUrl("https://example.com/servers.json")
+        if ( jsonRes != null){
+            KKApp.saveToSharedPreferences(this,"sslistme-s3", jsonRes);
+        }
+        val response = try {
+            Gson().fromJson(jsonRes, ListResponse::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+        if ( response != null){
+            try {
+                ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
+                response.servers.forEach { ProfileManager.createProfile(it)}
+                Profile.findAllUrls(text).forEach { ProfileManager.createProfile(it) }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    private fun syncProfiles_old() {
+        KKApp.saveToSharedPreferences(this,"sslistme", ssListMe);
         for (url in resources.getStringArray(R.array.proxies_url)) {
             try {
 //                val res = Http.get(url, timeout = 1000)
 //                val text = if (res.ok) res.text else ""
-                val text = ssList
+                val text = KKApp.getFromSharedPreferences(this,"sslistme");
                 ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
                 Profile.findAllUrls(text).forEach { ProfileManager.createProfile(it) }
                 break
@@ -270,3 +295,37 @@ ss://YWVzLTI1Ni1jZmI6YXNkS2thc2tKS2Zuc2E@51.158.204.70:443#FR-%C3%8Ele-de-France
 ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@s1.api3.fun:443#DE-Germany%202%20+%F0%9F%87%A9%F0%9F%87%AA
 ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@91.107.143.205:443#DE-Germany%201%20+%F0%9F%87%A9%F0%9F%87%AA  
 """.trimIndent();
+
+val ssListMe = """ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@s1.api3.fun:443#DE-Germany%202%20+%F0%9F%87%A9%F0%9F%87%AA
+ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@91.107.143.205:443#DE-Germany%201%20+%F0%9F%87%A9%F0%9F%87%AA  
+""".trimIndent();
+
+data class AndroidConfig(
+    @SerializedName("ColCp") val colCp: Boolean,
+    @SerializedName("ColNf") val colNf: Boolean
+)
+
+data class ListResponse(
+    @SerializedName("Servers") val servers: List<String>,
+    @SerializedName("Config") val config: AndroidConfig?
+)
+
+fun fetchAndDecodeJsonFromUrl(url: String): ListResponse? {
+    return try {
+        val jsonText = URL(url).readText()
+        Gson().fromJson(jsonText, ListResponse::class.java)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun fetchJsonFromUrl(url: String): String? {
+    return try {
+        val jsonText = URL(url).readText()
+        jsonText
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}

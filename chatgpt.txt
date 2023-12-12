@@ -1,0 +1,15 @@
+To ChatGPT:
+
+Read this carefully, this document is written for ChatGPT;
+the entire message that I provide here is the source code of my app all appended in one file
+in order for you to understand it better and make this chat session better.
+
+ChatGPT's role here is to write for me the parts that I need you to write with respect to app architectures, libraries, modules,
+clean code rules that I follow.
+
+architure of the projcet :
+this project is android client of shadowsocks vpn
+
+Now if you really understood what i saied, just DON't Do ANYTHING on the Your response; JUST DEEPLY UNDESTAND THIS CODES AND WAIT FOR ME IN NEXT MESSAGE TO TELL YOU WHAT THINGS TO CODE.
+Below codes are just my source codes:
+
