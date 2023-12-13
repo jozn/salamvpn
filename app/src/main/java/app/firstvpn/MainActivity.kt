@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.RemoteException
+import android.util.Base64
+//import android.util.Base64
 import android.view.View
 import androidx.preference.PreferenceDataStore
 import app.firstvpn.R
@@ -26,6 +28,7 @@ import kotlin.concurrent.thread
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.net.URL
+import java.net.URLDecoder
 
 class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     OnPreferenceDataStoreChangeListener {
@@ -157,9 +160,9 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     }
 
     private fun syncProfiles() {
-        val jsonRes = fetchJsonFromUrl("https://example.com/servers.json")
-        if ( jsonRes != null){
-            KKApp.saveToSharedPreferences(this,"sslistme-s3", jsonRes);
+        val jsonRes = fetchJsonFromUrl("https://artifacts5.s3.ir-thr-at1.arvanstorage.ir/servers-raw.json")
+        if (jsonRes != null) {
+            KKApp.saveToSharedPreferences(this, "sslistme-s3", jsonRes)
         }
         val response = try {
             Gson().fromJson(jsonRes, ListResponse::class.java)
@@ -167,11 +170,15 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
             e.printStackTrace()
             null
         }
-        if ( response != null){
+        response?.let { resp ->
             try {
                 ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
-                response.servers.forEach { ProfileManager.createProfile(it)}
-                Profile.findAllUrls(text).forEach { ProfileManager.createProfile(it) }
+                resp.servers.map {
+                    var rr = fromShadowsocksUrl(it)
+                    if(rr != null) {
+                        ProfileManager.createProfile(rr)
+                    }
+                }
             } catch (e: Exception) {
                 Timber.e(e)
             }
@@ -324,6 +331,54 @@ fun fetchJsonFromUrl(url: String): String? {
     return try {
         val jsonText = URL(url).readText()
         jsonText
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun fromShadowsocksUrl(ssUrl: String): Profile? {
+    return try {
+        val base64Part = ssUrl.substringAfter("ss://").substringBefore("@")
+        val decodedUserInfo = String(Base64.decode(base64Part, Base64.URL_SAFE or Base64.NO_WRAP))
+        val methodAndPassword = decodedUserInfo.split(":")
+
+        val hostAndPort = ssUrl.substringAfter("@").substringBefore("#").split(":")
+        val host = hostAndPort[0]
+        val port = hostAndPort[1].toInt()
+
+        val tag = ssUrl.substringAfter("#").let { URLDecoder.decode(it, "UTF-8") }
+
+        Profile(
+            // Assign values to the Profile properties
+            name = tag,
+            host = host,
+            remotePort = port,
+            method = methodAndPassword[0],
+            password = methodAndPassword[1]
+            // Add other fields if necessary
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun fromShadowsocksUrl_old(ssUrl: String): Profile? {
+    return try {
+        val decodedUrl = String(Base64.decode(ssUrl.substringAfter("ss://"), Base64.NO_PADDING or Base64.URL_SAFE))
+        val parts = decodedUrl.split("@")
+        val methodAndPassword = parts[0].split(":")
+        val hostAndPort = parts[1].split(":")
+
+        Profile().apply {
+            method = methodAndPassword[0]
+            password = methodAndPassword[1]
+            host = hostAndPort[0]
+            remotePort = hostAndPort[1].toInt()
+            name = ssUrl.substringAfterLast("#")
+//            uri = ssUrl
+        }
     } catch (e: Exception) {
         e.printStackTrace()
         null
