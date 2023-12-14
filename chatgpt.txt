@@ -13,3 +13,33 @@ this project is android client of shadowsocks vpn
 Now if you really understood what i saied, just DON't Do ANYTHING on the Your response; JUST DEEPLY UNDESTAND THIS CODES AND WAIT FOR ME IN NEXT MESSAGE TO TELL YOU WHAT THINGS TO CODE.
 Below codes are just my source codes:
 
+////
+reddit
+
+Bussiness pitch: revenue sharing in exchange for publishing my app
+
+Hi, i'm From Iran and want to create google developer account but due to recent documents
+requiremt of goverment ID and the payment card must be with my name I could not create any
+account now, We do not have access to credit card in Iran.
+
+I have created an VPN app, this app is my first app to pitch to some investoer to get some ideas of
+how fast a VPN can grow and what is the ads revenue will looks like.
+
+This app does not have any runtime permission and it has basic requiremnts in "Others" catergoirey.
+There is no malvare in the codes, this is purely bussin app.
+
+The basic of app in now ready, and it's enjoy very good qulity with decent UI.
+
+If we comes to terms with you it would be this:
+1) You publish the app
+2) Ads revenue will be shared this way: 1/3 You, 1/3 me for server, 1/3 me. (I could do 50/50 if I other conditons was right)
+3) The app probley will in your account for 3 month after that I will create my own account with
+    creating a google paly account in with registering a comapny a foregin countiry
+4) You will compansted with full revenue of 100$ or a month of ads reveune when I you give up the
+ owener ship.
+5) App counrtly doens not have any ads, b/c I do not have Admob eigher, You should create an token for this app in Admod, few days later I will send you
+the updated version with showing Ads.
+5) You could charege me a fee for publish the app. give your price in the DM.
+
+If you are intersed you could DM, I will send you the link of .apk and screenshot of the app. you check the app and if you was intresed we maybe proceed. If you DM me please send send the address of a an app of your google play, I only do bussness with honest people so I could migrate the app later.
+
