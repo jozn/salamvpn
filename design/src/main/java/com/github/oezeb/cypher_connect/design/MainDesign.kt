@@ -110,7 +110,10 @@ abstract class MainDesign: AppCompatActivity() {
                     currentLocationButton.setDrawableStart(flag)
                 }
             } else {
-                currentLocationButton.setDrawableStart(getDrawable(R.drawable.flag_placeholder))
+                Handler(Looper.getMainLooper()).post {
+                    currentLocationButton.setDrawableStart(getDrawable(R.drawable.flag_placeholder))
+                }
+//                currentLocationButton.setDrawableStart(getDrawable(R.drawable.flag_placeholder))
             }
         }
         currentLocationButton.text = location.name

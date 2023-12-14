@@ -6,10 +6,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import kotlinx.parcelize.Parcelize
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.net.URL
@@ -41,7 +43,7 @@ fun TextView.setDrawableEnd(drawable: Int) = setDrawableEnd(context.getDrawable(
  * https://flagpedia.net
  */
 class FlagCDN(private val context: Context) {
-    fun getCodes(): Map<String, *> {
+    fun getCodes_old(): Map<String, *> {
         val filename = "codes.json"
         val file = File(context.cacheDir, filename)
         return if (file.exists()) {
@@ -58,6 +60,37 @@ class FlagCDN(private val context: Context) {
             } else {
                 mapOf<String, Any>()
             }
+        }
+    }
+
+    fun getCodes(): Map<String, *> {
+        val filename = "codes.json"
+        val file = File(context.cacheDir, filename)
+
+        return if (file.exists()) {
+            val data = file.readText()
+            safelyParseJsonToMap(data)
+        } else {
+            file.createNewFile()
+            val url = context.getString(R.string.country_codes_url)
+            val res = Http.get(url, timeout = 1000)
+            if (res.ok) {
+                val data = res.text
+                file.writeText(data)
+                safelyParseJsonToMap(data)
+            } else {
+                mapOf<String, Any>()
+            }
+        }
+    }
+
+    fun safelyParseJsonToMap(jsonString: String): Map<String, *> {
+        return try {
+            val jsonObject = JSONObject(jsonString)
+            jsonObject.toMap()
+        } catch (e: JSONException) {
+            Log.e("JSON Parsing Error", "Error parsing JSON: ${e.message}")
+            emptyMap<String, Any>()
         }
     }
 

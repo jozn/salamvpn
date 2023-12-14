@@ -118,6 +118,10 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
             if (state == State.Connected) Core.reloadService()
         }
 
+        if (state == State.Connected) {
+            updateLastConnectedProfileId(this, id)
+        }
+
         currentProfileId = id
     }
 
@@ -134,6 +138,11 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Me
+        val appConfState = loadAppConfState(this)
+        currentProfileId = appConfState?.lastConnectedProfileId ?: -1
+
         syncProfilesThread.start()
         thread {
             syncProfilesThread.join()
@@ -163,6 +172,9 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
         val jsonRes = fetchJsonFromUrl("https://artifacts5.s3.ir-thr-at1.arvanstorage.ir/servers-raw.json")
         if (jsonRes != null) {
             KKApp.saveToSharedPreferences(this, "sslistme-s3", jsonRes)
+        } else {
+            return
+           // jsonRes = KKApp.getFromSharedPreferences(this,"sslistme-s3")
         }
         val response = try {
             Gson().fromJson(jsonRes, ListResponse::class.java)
@@ -170,6 +182,10 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
             e.printStackTrace()
             null
         }
+        if (response == null) {
+            return
+        }
+
         response?.let { resp ->
             try {
                 ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
@@ -252,6 +268,8 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
         connection.disconnect(this)
         connection.connect(this, this)
     }
+
+
 }
 
 val ssList = """ss://YWVzLTI1Ni1nY206UENubkg2U1FTbmZvUzI3@38.121.43.71:8091#US-Texas

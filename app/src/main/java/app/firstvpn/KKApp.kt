@@ -1,6 +1,7 @@
 package app.firstvpn
 
 import android.content.Context
+import com.google.gson.Gson
 
 class KKApp {
     companion object {
@@ -18,4 +19,22 @@ class KKApp {
             return sharedPreferences.getString(key, defaultValue) ?: defaultValue
         }
     }
+}
+
+data class AppConfState(
+    val lastConnectedProfileId: Long
+)
+
+fun saveAppConfState(context: Context, state: AppConfState) {
+    val jsonState = Gson().toJson(state)
+    KKApp.saveToSharedPreferences(context, "app_conf_state", jsonState)
+}
+
+fun loadAppConfState(context: Context): AppConfState? {
+    val jsonState = KKApp.getFromSharedPreferences(context, "app_conf_state")
+    return Gson().fromJson(jsonState, AppConfState::class.java)
+}
+
+fun updateLastConnectedProfileId(context: Context, id: Long) {
+    if (id >= 0) saveAppConfState(context, AppConfState(lastConnectedProfileId = id))
 }

@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showAbout"
+            android:visibility="gone"
             android:src="@drawable/info_circle" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

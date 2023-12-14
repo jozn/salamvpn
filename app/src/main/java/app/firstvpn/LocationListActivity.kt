@@ -14,21 +14,29 @@ class LocationListActivity: LocationListDesign() {
     }
 
     private fun updateSpeed() {
-        setProgressBarVisible(true)
-        val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
+        try {
+            setProgressBarVisible(true)
+            val profiles = ProfileManager.getActiveProfiles() ?: emptyList()
 
-        val handler = Handler(Looper.getMainLooper())
-        thread {
-            val groups = profiles.chunked(MAX_CONCURRENT_TEST)
-            for (group in groups) {
-                val delayArray = testProfiles(group)
-                val speedArray = delayArray.map { (-(it.toDouble() / TEST_TIME_OUT) + 1) * 4 }
-                for (i in group.indices) {
-                    handler.post { updateSpeed(group[i].id, speedArray[i].roundToInt()) }
+            val handler = Handler(Looper.getMainLooper())
+            thread {
+                val groups = profiles.chunked(MAX_CONCURRENT_TEST)
+                for (group in groups) {
+                    val delayArray = testProfiles(group)
+                    val speedArray = delayArray.map { (-(it.toDouble() / TEST_TIME_OUT) + 1) * 4 }
+                    for (i in group.indices) {
+                        handler.post { updateSpeed(group[i].id, speedArray[i].roundToInt()) }
+                    }
                 }
-            }
 
-            handler.post { setProgressBarVisible(false) }
+                handler.post { setProgressBarVisible(false) }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+//            handler.post {
+//                setProgressBarVisible(false)
+//                // Handle the exception, e.g., show error message
+//            }
         }
     }
 
