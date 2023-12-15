@@ -27,6 +27,7 @@ import timber.log.Timber
 import kotlin.concurrent.thread
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import org.json.JSONObject
 import java.net.URL
 import java.net.URLDecoder
 
@@ -91,10 +92,13 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
                     handler.post { showLoadingProgressBar() }
                     if (bestProfileThread.isAlive) bestProfileThread.join()
                     bestProfile?.let {
+                        KKApp.updateLastConnectedProfileId(this, it.id)
                         Core.switchProfile(it.id)
                     }
                     handler.post { hideLoadingProgressBar() }
                 }
+            } else {
+                KKApp.updateLastConnectedProfileId(this, currentProfileId)
             }
             Core.startService()
         }
@@ -115,7 +119,12 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
             }
         } else if (currentProfileId != id) {
             Core.switchProfile(id)
+            KKApp.updateLastConnectedProfileId(this, id)
             if (state == State.Connected) Core.reloadService()
+        }
+
+        if (state == State.Connected) {
+//            KKApp.updateLastConnectedProfileId(this, id)
         }
 
         currentProfileId = id
@@ -134,6 +143,12 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ME
+        val appConfState = KKApp.loadAppConfState(this)
+        currentProfileId = appConfState?.lastConnectedProfileId ?: -1
+
+
         syncProfilesThread.start()
         thread {
             syncProfilesThread.join()
@@ -160,6 +175,30 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
     }
 
     private fun syncProfiles() {
+        val jsonRes = fetchJsonFromUrl("https://artifacts5.s3.ir-thr-at1.arvanstorage.ir/servers-raw.json")
+        if (jsonRes != null) {
+            KKApp.saveToSharedPreferences(this, "sslistme-s3", jsonRes)
+
+            try {
+                val jsonObject = JSONObject(jsonRes)
+                val servers = jsonObject.getJSONArray("Servers")
+                if(servers.length() > 0 ) {
+                    ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }""
+                }
+                for (i in 0 until servers.length()) {
+                    val serverUrl = servers.getString(i)
+                    val rr = fromShadowsocksUrl(serverUrl)
+                    rr?.let {
+                        ProfileManager.createProfile(it)
+                    }
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    private fun syncProfilesold5() {
         val jsonRes = fetchJsonFromUrl("https://artifacts5.s3.ir-thr-at1.arvanstorage.ir/servers-raw.json")
         if (jsonRes != null) {
             KKApp.saveToSharedPreferences(this, "sslistme-s3", jsonRes)
@@ -307,6 +346,7 @@ val ssListMe = """ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@s1.api3.fun:443#DE-G
 ss://YWVzLTI1Ni1nY206ZVBvcFR2THMyWDNqeQ==@91.107.143.205:443#DE-Germany%201%20+%F0%9F%87%A9%F0%9F%87%AA  
 """.trimIndent();
 
+/*
 data class AndroidConfig(
     @SerializedName("ColCp") val colCp: Boolean,
     @SerializedName("ColNf") val colNf: Boolean
@@ -316,6 +356,7 @@ data class ListResponse(
     @SerializedName("Servers") val servers: List<String>,
     @SerializedName("Config") val config: AndroidConfig?
 )
+*/
 
 fun fetchAndDecodeJsonFromUrl(url: String): ListResponse? {
     return try {

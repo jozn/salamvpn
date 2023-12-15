@@ -42,6 +42,10 @@ fun TextView.setDrawableEnd(drawable: Int) = setDrawableEnd(context.getDrawable(
  */
 class FlagCDN(private val context: Context) {
     fun getCodes(): Map<String, *> {
+        return countryMap
+    }
+
+    fun getCodes_old(): Map<String, *> {
         val filename = "codes.json"
         val file = File(context.cacheDir, filename)
         return if (file.exists()) {
