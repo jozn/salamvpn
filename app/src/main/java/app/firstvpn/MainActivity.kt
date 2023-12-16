@@ -183,7 +183,7 @@ class MainActivity : MainDesign(), ShadowsocksConnection.Callback,
                 val jsonObject = JSONObject(jsonRes)
                 val servers = jsonObject.getJSONArray("Servers")
                 if(servers.length() > 0 ) {
-                    ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }""
+                    ProfileManager.getAllProfiles()?.forEach { ProfileManager.delProfile(it.id) }
                 }
                 for (i in 0 until servers.length()) {
                     val serverUrl = servers.getString(i)
